@@ -62,7 +62,7 @@ class WebUiRequestHandler(CGIHTTPRequestHandler):
     GIT_HTTP_BACKEND_DIR = None
 
     @classmethod
-    def initialize(cls, repo_root):
+    def initialize(cls, repo_root, bare):
         web_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0]))))
         web_root = os.path.join(web_root, "share", "git-webui", "webui")
         WebUiRequestHandler.WEB_ROOT = web_root
@@ -77,7 +77,7 @@ class WebUiRequestHandler(CGIHTTPRequestHandler):
             git_http_backend = which("git-http-backend", candidates)
         if git_http_backend is not None:
             WebUiRequestHandler.GIT_HTTP_BACKEND_DIR = os.path.dirname(git_http_backend)
-        os.environ["GIT_PROJECT_ROOT"] = repo_root + "/.git"
+        os.environ["GIT_PROJECT_ROOT"] = bare and repo_root or repo_root + "/.git"
         os.environ["GIT_HTTP_EXPORT_ALL"] = ""
 
 
@@ -240,6 +240,7 @@ if __name__ == '__main__':
     parser.add_argument("--repo-root", help = "repository root path. By default goes up a dir until a '.git' directory is found")
     parser.add_argument("--allow-hosts", help = "what other host(s) are allowed to have write access")
     parser.add_argument("--no-browser", action='store_true', help = "do not start web browser")
+    parser.add_argument("--bare", action='store_true', help = "If the repository was created with --bare")
  
     args = parser.parse_args()
 
@@ -257,10 +258,10 @@ if __name__ == '__main__':
         allowed_hosts += args.allow_hosts.split(',')
 
 
-    if args.repo_root is None or '.git' not in os.listdir(args.repo_root):
+    if args.repo_root is None or ('.git' not in os.listdir(args.repo_root) and not args.bare):
         sys.stderr.write("No git repository found\n")
         sys.exit(1)
-    WebUiRequestHandler.initialize(args.repo_root)
+    WebUiRequestHandler.initialize(args.repo_root, args.bare)
 
     port = args.port if args.port is not None else 8000
     httpd = None
