@@ -24,12 +24,12 @@ You need to install [Python](https://www.python.org/downloads/) first.
 
 Using curl (Mac OS X & Windows):
 ```
-curl https://raw.githubusercontent.com/alberthier/git-webui/master/install/installer.sh | bash
+curl https://raw.githubusercontent.com/evertonrobertoauler/git-webui/master/install/installer.sh | bash
 ```
 
 Using wget (Linux):
 ```
-wget -O - https://raw.githubusercontent.com/alberthier/git-webui/master/install/installer.sh | bash
+wget -O - https://raw.githubusercontent.com/evertonrobertoauler/git-webui/master/install/installer.sh | bash
 ```
 
 Upon installation git-webui will update itself automatically every couple of weeks.
@@ -41,7 +41,7 @@ You can deactivate auto-update by removing the `autoupdate = true` line from the
 Simply clone the repository and install the alias
 
 ```
-git clone https://github.com/alberthier/git-webui.git
+git clone https://github.com/evertonrobertoauler/git-webui.git
 git config --global alias.webui \!$PWD/git-webui/release/libexec/git-core/git-webui
 ```
 
